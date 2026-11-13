@@ -7,7 +7,7 @@
   --accent: #b77cff;
   --accent-2: #ff5ea8;
   --topbar-h: 56px;
-  --sidebar-w: 240px;
+  --sidebar-w: 270px;
 
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
@@ -110,15 +110,67 @@ a { color: inherit; text-decoration: none; }
   background: var(--surface);
 }
 
-@media (max-width: 720px) {
+/* ---------- Navigation extras ---------- */
+.nav-link { display: flex; align-items: baseline; gap: 8px; }
+.nav-num {
+  flex: 0 0 auto; min-width: 18px;
+  font: 0.72rem ui-monospace, 'SF Mono', Menlo, monospace;
+  color: var(--muted); opacity: 0.7;
+}
+.nav-link.active .nav-num { color: var(--accent); opacity: 1; }
+
+.menu-btn {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 40px; height: 40px; margin-left: -8px; margin-right: 4px;
+  border: 0; border-radius: 8px; cursor: pointer;
+  background: transparent; color: var(--text);
+}
+.menu-btn:hover { background: rgba(255, 255, 255, 0.06); }
+
+.nav-backdrop { display: none; }
+
+/* ---------- Mobile layout: sidebar becomes a slide-in menu ---------- */
+/* Keep the breakpoint in sync with MOBILE_QUERY in Layout.tsx */
+@media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
-    grid-template-rows: var(--topbar-h) auto 1fr;
-    grid-template-areas: 'top' 'side' 'main';
+    grid-template-rows: var(--topbar-h) 1fr;
+    grid-template-areas: 'top' 'main';
+    height: 100dvh;
   }
-  .sidebar { flex-direction: row; flex-wrap: wrap; border-right: 0; border-bottom: 1px solid var(--border); }
-  .nav-section { display: none; }
-  .content { padding: 24px 16px; }
+  .topbar { padding: 0 12px; position: relative; z-index: 6; }
+  .menu-btn { display: inline-flex; }
+
+  .sidebar {
+    position: fixed; top: var(--topbar-h); left: 0; bottom: 0; z-index: 5;
+    width: min(300px, 85vw);
+    padding: 12px 12px 24px;
+    border-right: 1px solid var(--border);
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overscroll-behavior: contain;
+  }
+  .sidebar.open { transform: translateX(0); box-shadow: 12px 0 40px rgba(0, 0, 0, 0.4); }
+  .nav-link { padding: 11px 12px; }   /* bigger touch targets */
+
+  .nav-backdrop {
+    display: block;
+    position: fixed; inset: var(--topbar-h) 0 0 0; z-index: 4;
+    background: rgba(5, 6, 10, 0.55);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .nav-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .content { padding: 28px 16px 48px; }
+}
+
+@media (max-width: 720px) {
+  .page h1 { font-size: 1.7rem; }
+  .page h2 { font-size: 1.3rem; }
+  .lead { font-size: 1.05rem; }
+  .cta { display: block; text-align: center; }
 }
 
 /* ---------- Article content ---------- */
@@ -237,7 +289,7 @@ a { color: inherit; text-decoration: none; }
   padding: 14px 24px; border-bottom: 1px solid var(--border);
   background: var(--surface);
 }
-.drawer-head h2 { margin: 0; font-size: 1.15rem; }
+.drawer-head h2 { margin: 0; padding: 0; border: 0; font-size: 1.15rem; }
 .drawer-close {
   width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
   border: 0; background: transparent; color: var(--muted); font-size: 1.5rem; line-height: 1;
@@ -442,3 +494,35 @@ button.cta { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Small-screen polish (applies site-wide) ---------- */
+html, body { overflow-x: hidden; }
+.drawer-body { overscroll-behavior: contain; }
+.render-card-head { flex-wrap: wrap; }
+.demo-head { gap: 8px; flex-wrap: wrap; }
+.queue-table { display: block; overflow-x: auto; }
+.queue-table td code, .queue-table th code { white-space: nowrap; }
+
+@media (max-width: 720px) {
+  /* iOS zooms into inputs under 16px on focus */
+  input, textarea, select, .todo-note { font-size: 16px; }
+
+  .code { font-size: 0.78rem; padding: 10px 0; }
+  .code-line { padding: 0 12px; }
+  .demo-stack, .demo-body { padding: 12px; }
+  .snapshots { padding: 0 12px 12px; }
+  .demo-log { font-size: 0.74rem; }
+  .quiz { padding: 14px; }
+  .queue-table { font-size: 0.85rem; }
+  .queue-table th, .queue-table td { padding: 6px 8px; }
+  .tally { width: 100%; justify-content: space-around; }
+  .drawer-head { padding: 12px 16px; }
+  .callout, .tldr { padding: 12px 14px; }
+  .instance-chip { word-break: break-word; }
+  .render-children { padding-left: 10px; }
+}
+
+@media (max-width: 380px) {
+  .brand-name { font-size: 1rem; }
+  .cycle { grid-template-columns: 1fr; }
+}

@@ -30,15 +30,15 @@ export const weirdnesses: Weirdness[] = [
   {
     slug: 'state-snapshot',
     title: 'Three setStates, one +1',
-    summary: 'This counter calls setCount(count + 1) three times per click. Why doesnât it go up by 3?',
+    summary: 'This counter calls setCount(count + 1) three times per click. Why doesn’t it go up by 3?',
     Puzzle: StateSnapshotPuzzle,
     Explanation: StateSnapshotExplanation,
   },
   {
     slug: 'key-reset',
-    title: 'The key that isnât for lists',
+    title: 'The key that isn’t for lists',
     summary:
-      'Profile has a key, but it isnât in a list. What happens to Profile, and to its child LikeButton, when the key changes?',
+      'Profile has a key, but it isn’t in a list. What happens to Profile, and to its child LikeButton, when the key changes?',
     Puzzle: KeyResetPuzzle,
     Explanation: KeyResetExplanation,
   },
